@@ -1,4 +1,4 @@
-package com.boyz.rho.pass;
+package com.boyz.rho.pass.Activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,9 +12,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+
+import com.boyz.rho.pass.R;
+import com.boyz.rho.pass.Utils.ListAdapter;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private ListView listView;
+    private ArrayList<String> sites = new ArrayList<>();
+    private ArrayList<String> usernames = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +50,18 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        sites.add("one.com");
+        sites.add("two.com");
+        sites.add("three.com");
+
+        usernames.add("tim");
+        usernames.add("richard");
+        usernames.add("eric");
+
+        listView = (ListView) findViewById(R.id.listview);
+        listView.setAdapter(new ListAdapter(this, sites, usernames));
     }
 
     @Override
