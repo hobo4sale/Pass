@@ -19,6 +19,8 @@ import com.boyz.rho.pass.Utils.ListAdapter;
 
 import java.util.ArrayList;
 
+import com.boyz.rho.pass.R;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
