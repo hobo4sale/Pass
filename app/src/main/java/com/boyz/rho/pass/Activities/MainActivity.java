@@ -1,9 +1,8 @@
 package com.boyz.rho.pass.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
 import com.boyz.rho.pass.R;
@@ -19,10 +19,8 @@ import com.boyz.rho.pass.Utils.ListAdapter;
 
 import java.util.ArrayList;
 
-import com.boyz.rho.pass.R;
-
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     private ListView listView;
     private ArrayList<String> sites = new ArrayList<>();
@@ -36,13 +34,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setOnClickListener(this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -64,6 +56,7 @@ public class MainActivity extends AppCompatActivity
 
         listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(new ListAdapter(this, sites, usernames));
+
     }
 
     @Override
@@ -122,4 +115,16 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    @Override
+    public void onClick(View view) {
+        int id  = view.getId();
+        switch(id) {
+            case R.id.fab:
+                Intent intent = new Intent(this, AddSiteActivity.class);
+                startActivityForResult(intent, RESULT_OK);
+                break;
+        }
+    }
+
 }
