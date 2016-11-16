@@ -1,6 +1,7 @@
 package com.boyz.rho.pass.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -13,12 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.boyz.rho.pass.R;
 import com.boyz.rho.pass.Utils.ListAdapter;
-import com.boyz.rho.pass.Utils.PasswordGenerator;
-import com.boyz.rho.pass.Utils.PasswordGeneratorHelper;
 
 import java.util.ArrayList;
 
@@ -32,6 +30,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -47,15 +46,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-        sites.add("one.com");
-        sites.add("two.com");
-        sites.add("three.com");
-
-        usernames.add("tim");
-        usernames.add("richard");
-        usernames.add("eric");
 
         listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(new ListAdapter(this, sites, usernames));
