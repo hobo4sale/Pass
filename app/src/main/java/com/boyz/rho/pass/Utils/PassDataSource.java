@@ -2,8 +2,10 @@ package com.boyz.rho.pass.Utils;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+
+
+import net.sqlcipher.Cursor;
+import net.sqlcipher.database.SQLiteDatabase;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ public class PassDataSource {
     }
 
     public void open() throws SQLException {
-        database = dbHelper.getWritableDatabase();
+        database = dbHelper.getWritableDatabase("chincha");
     }
 
     public void close () {

@@ -1,6 +1,7 @@
 package com.boyz.rho.pass.Utils;
 
-import android.database.Cursor;
+
+import net.sqlcipher.Cursor;
 
 public class Password {
 
