@@ -140,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError("Invalid Password");
+            mPasswordView.setError("Invalid Login");
             focusView = mPasswordView;
             cancel = true;
         }
@@ -287,7 +287,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             } else {
-                mPasswordView.setError("Invalid Password");
+                mPasswordView.setError("Invalid Login");
                 mPasswordView.requestFocus();
             }
         }

@@ -30,7 +30,7 @@ public class AddSiteActivity extends Activity implements View.OnClickListener{
         userText = (EditText) findViewById(R.id.edit_user);
         passText = (EditText) findViewById(R.id.edit_password);
 
-        Button submitButton = (Button) findViewById(R.id.button);
+        Button submitButton = (Button) findViewById(R.id.submit_button);
         submitButton.setOnClickListener(this);
 
         dataSource = new PassDataSource(this);
@@ -47,7 +47,12 @@ public class AddSiteActivity extends Activity implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         switch(view.getId()) {
-            case R.id.button:
+            case R.id.submit_button:
+                String site = siteText.getText().toString();
+                String username = userText.getText().toString();
+                String password = passText.getText().toString();
+                dataSource.addPassword(site, username, password);
+                finish();
                 break;
         }
     }

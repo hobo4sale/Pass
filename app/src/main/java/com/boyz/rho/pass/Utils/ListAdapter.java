@@ -19,15 +19,13 @@ import java.util.ArrayList;
 public class ListAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<String> sites;
-    private ArrayList<String> usernames;
+    private ArrayList<Login> logins;
     private LayoutInflater inflater;
 
 
-    public ListAdapter(MainActivity mainActivity, ArrayList<String> sites, ArrayList<String> usernames) {
+    public ListAdapter(MainActivity mainActivity, ArrayList<Login> logins) {
         context = mainActivity;
-        this.sites = sites;
-        this.usernames = usernames;
+        this.logins = logins;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -35,7 +33,7 @@ public class ListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return sites.size();
+        return logins.size();
     }
 
     @Override
@@ -54,8 +52,10 @@ public class ListAdapter extends BaseAdapter {
         TextView siteText = (TextView) v.findViewById(R.id.sitename);
         TextView userText = (TextView) v.findViewById(R.id.username);
 
-        siteText.setText(sites.get(i));
-        userText.setText(usernames.get(i));
+        Login login = logins.get(i);
+
+        siteText.setText(login.getSite());
+        userText.setText(login.getUsername());
 
         return v;
     }

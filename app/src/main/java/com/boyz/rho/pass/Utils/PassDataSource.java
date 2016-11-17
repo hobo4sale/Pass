@@ -21,14 +21,13 @@ public class PassDataSource {
 
     public void open(String password) throws SQLException{
         database = dbHelper.getWritableDatabase(password);
-
     }
 
     public void close () {
         dbHelper.close();
     }
 
-    public Password addPassword(String site, String username,  String password) {
+    public Login addPassword(String site, String username, String password) {
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.COLUMN_SITE, site);
         values.put(DatabaseHelper.COLUMN_USERNAME, username);
@@ -37,9 +36,9 @@ public class PassDataSource {
         long insertId = database.insert(DatabaseHelper.TABLE_PASS, null, values);
         Cursor cursor = database.query(DatabaseHelper.TABLE_PASS, allColumns, DatabaseHelper.COLUMN_ID +  " + " + insertId, null, null, null, null);
         cursor.moveToFirst();
-        Password newPassword = new Password(cursor);
+        Login newLogin = new Login(cursor);
         cursor.close();
-        return newPassword;
+        return newLogin;
     }
 
     public void updateUsername(String site, String newUsername, String oldUsername) {
@@ -54,23 +53,22 @@ public class PassDataSource {
     }
 
     public void deletePassword(String site, String username) {
-        String deleteSQL = "DELETE FROM " + DatabaseHelper.TABLE_PASS + " WHERE site=" + site + " AND username=" + username + ";";
-        database.execSQL(deleteSQL);
+        database.delete(DatabaseHelper.TABLE_PASS,"site=? and username=?", new String[]{site, username});
     }
 
-    public ArrayList<Password> getAllPasswords() {
-        ArrayList<Password> passwords = new ArrayList<Password>();
+    public ArrayList<Login> getAllPasswords() {
+        ArrayList<Login> logins = new ArrayList<Login>();
 
         Cursor cursor = database.query(DatabaseHelper.TABLE_PASS, allColumns, null, null, null, null, null);
         cursor.moveToFirst();
 
         while(!cursor.isAfterLast()) {
-            passwords.add(new Password(cursor));
+            logins.add(new Login(cursor));
             cursor.moveToNext();
         }
         cursor.close();
 
-        return passwords;
+        return logins;
     }
 
 
