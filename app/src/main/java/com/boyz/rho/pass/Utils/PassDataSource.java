@@ -19,8 +19,9 @@ public class PassDataSource {
         dbHelper = new DatabaseHelper(context);
     }
 
-    public void open() throws SQLException {
-        database = dbHelper.getWritableDatabase("chincha");
+    public void open(String password) throws SQLException{
+        database = dbHelper.getWritableDatabase(password);
+
     }
 
     public void close () {

@@ -26,7 +26,7 @@ public class HashHelper {
 
     public String getHash(char[] password, byte[] salt, int iterations) throws NoSuchAlgorithmException, InvalidKeySpecException {
         PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, 4096);
-        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
         byte [] hash = skf.generateSecret(spec).getEncoded();
         return toHex(salt) + ":" + toHex(hash);
     }

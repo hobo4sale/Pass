@@ -1,7 +1,6 @@
 package com.boyz.rho.pass.Activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -14,9 +13,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.boyz.rho.pass.R;
 import com.boyz.rho.pass.Utils.ListAdapter;
+import com.boyz.rho.pass.Utils.PassDataSource;
 
 import java.util.ArrayList;
 
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity
     private ListView listView;
     private ArrayList<String> sites = new ArrayList<>();
     private ArrayList<String> usernames = new ArrayList<>();
+    private PassDataSource dataSource;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,15 @@ public class MainActivity extends AppCompatActivity
 
         listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(new ListAdapter(this, sites, usernames));
+
+        password = savedInstanceState.getString("password");
+        dataSource = new PassDataSource(this);
+        try {
+            dataSource.open(password);
+        }
+        catch (Exception e) {
+            Toast.makeText(this, "Error opening database", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -115,6 +127,7 @@ public class MainActivity extends AppCompatActivity
         switch(id) {
             case R.id.fab:
                 Intent intent = new Intent(this, AddSiteActivity.class);
+                intent.putExtra("password", password);
                 startActivityForResult(intent, RESULT_OK);
                 break;
         }

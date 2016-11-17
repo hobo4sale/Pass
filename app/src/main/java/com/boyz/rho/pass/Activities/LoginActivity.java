@@ -4,7 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,11 +32,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.boyz.rho.pass.R;
+import com.boyz.rho.pass.Utils.HashHelper;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -41,6 +46,9 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity {
+
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -59,6 +67,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private Button mEmailSignInButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,6 +98,23 @@ public class LoginActivity extends AppCompatActivity {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = prefs.edit();
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        String email = prefs.getString("email", null);
+        String password = prefs.getString("password", null);
+
+        if (email == null && password == null) {
+            mEmailSignInButton.setText("Register");
+        }
     }
 
     /**
@@ -150,7 +176,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 5;
     }
 
     /**
@@ -214,16 +240,40 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
+            String storedEmail = prefs.getString("email", null);
+            String storedPassword = prefs.getString("password", null);
 
-            // TODO: register the new account here.
-            return true;
+            HashHelper helper = new HashHelper();
+            if (storedEmail == null && storedPassword == null) {
+
+                byte[] salt = helper.createSalt();
+                try {
+                    String hash = helper.getHash(mPassword.toCharArray(), salt, 10);
+                    editor.putString("password", hash);
+                    editor.putString("salt", Base64.encodeToString(salt, Base64.DEFAULT));
+                    editor.commit();
+                    return true;
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "Error occured during registration",
+                            Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                String saltString = prefs.getString("salt", null);
+                String storedHash = prefs.getString("password", null);
+                byte[] salt = Base64.decode(saltString, Base64.DEFAULT);
+                try {
+                    String hash = helper.getHash(mPassword.toCharArray(), salt, 10);
+                    if(hash.compareTo(storedHash) == 0) {
+                        return true;
+                    }
+
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "Error occured during signin"
+                            , Toast.LENGTH_SHORT).show();
+                }
+
+            }
+            return false;
         }
 
         @Override
@@ -233,6 +283,7 @@ public class LoginActivity extends AppCompatActivity {
 
             if (success) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.putExtra("password", mPassword);
                 startActivity(intent);
                 finish();
             } else {
