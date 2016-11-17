@@ -35,7 +35,7 @@ public class AddSiteActivity extends Activity implements View.OnClickListener{
 
         dataSource = new PassDataSource(this);
         try {
-            dataSource.open(savedInstanceState.getString("password", null));
+            dataSource.open(getIntent().getExtras().getString("password", null));
         }
         catch (Exception e) {
             Toast.makeText(this, "Error opening database", Toast.LENGTH_SHORT).show();

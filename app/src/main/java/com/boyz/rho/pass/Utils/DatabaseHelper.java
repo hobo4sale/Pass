@@ -22,7 +22,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_DATABASE = "create table " + TABLE_PASS + "( " + COLUMN_ID + " integer primary key autoincrement, " + COLUMN_COMPANY + " text not null, " +
             COLUMN_PASSWORD + " text not null;";
 
-
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }

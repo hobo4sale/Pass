@@ -19,6 +19,8 @@ import com.boyz.rho.pass.R;
 import com.boyz.rho.pass.Utils.ListAdapter;
 import com.boyz.rho.pass.Utils.PassDataSource;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
@@ -53,13 +55,14 @@ public class MainActivity extends AppCompatActivity
         listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(new ListAdapter(this, sites, usernames));
 
-        password = savedInstanceState.getString("password");
+        password = getIntent().getExtras().getString("password");
+        SQLiteDatabase.loadLibs(this);
         dataSource = new PassDataSource(this);
         try {
             dataSource.open(password);
         }
         catch (Exception e) {
-            Toast.makeText(this, "Error opening database", Toast.LENGTH_SHORT).show();
+
         }
 
     }
