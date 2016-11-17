@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class PassDataSource {
     private SQLiteDatabase database;
     private DatabaseHelper dbHelper;
-    private String [] allColumns = {DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_COMPANY, DatabaseHelper.COLUMN_PASSWORD };
+    private String [] allColumns = {DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_SITE, DatabaseHelper.COLUMN_USERNAME, DatabaseHelper.COLUMN_PASSWORD };
 
     public PassDataSource(Context context) {
         dbHelper = new DatabaseHelper(context);
@@ -28,9 +28,10 @@ public class PassDataSource {
         dbHelper.close();
     }
 
-    public Password addPassword(String company, String password) {
+    public Password addPassword(String site, String username,  String password) {
         ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.COLUMN_COMPANY, company);
+        values.put(DatabaseHelper.COLUMN_SITE, site);
+        values.put(DatabaseHelper.COLUMN_USERNAME, username);
         values.put(DatabaseHelper.COLUMN_PASSWORD, password);
 
         long insertId = database.insert(DatabaseHelper.TABLE_PASS, null, values);
@@ -41,6 +42,21 @@ public class PassDataSource {
         return newPassword;
     }
 
+    public void updateUsername(String site, String newUsername, String oldUsername) {
+        String updateUsernameSQL = "UPDATE " + DatabaseHelper.TABLE_PASS + " SET username=" + newUsername + " WHERE site=" + site + " AND username=" + oldUsername + ";";
+        database.execSQL(updateUsernameSQL);
+
+    }
+
+    public void updatePassword(String site, String username, String password) {
+        String updatePasswordSQL = "UPDATE " + DatabaseHelper.TABLE_PASS + " SET password=" + password + " WHERE site=" + site + " username=" + username + ";";
+        database.execSQL(updatePasswordSQL);
+    }
+
+    public void deletePassword(String site, String username) {
+        String deleteSQL = "DELETE FROM " + DatabaseHelper.TABLE_PASS + " WHERE site=" + site + " AND username=" + username + ";";
+        database.execSQL(deleteSQL);
+    }
 
     public ArrayList<Password> getAllPasswords() {
         ArrayList<Password> passwords = new ArrayList<Password>();
