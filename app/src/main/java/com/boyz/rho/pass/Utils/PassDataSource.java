@@ -41,15 +41,11 @@ public class PassDataSource {
         return newLogin;
     }
 
-    public void updateUsername(String site, String newUsername, String oldUsername) {
-        String updateUsernameSQL = "UPDATE " + DatabaseHelper.TABLE_PASS + " SET username=" + newUsername + " WHERE site=" + site + " AND username=" + oldUsername + ";";
-        database.execSQL(updateUsernameSQL);
-
-    }
-
-    public void updatePassword(String site, String username, String password) {
-        String updatePasswordSQL = "UPDATE " + DatabaseHelper.TABLE_PASS + " SET password=" + password + " WHERE site=" + site + " username=" + username + ";";
-        database.execSQL(updatePasswordSQL);
+    public void updateSite(String site, String username, String password) {
+        ContentValues vals = new ContentValues();
+        vals.put("username", username);
+        vals.put("password", password);
+        database.update(DatabaseHelper.TABLE_PASS, vals, "site=?", new String[]{site});
     }
 
     public void deletePassword(String site, String username) {

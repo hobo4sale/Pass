@@ -12,10 +12,10 @@ import com.boyz.rho.pass.Utils.PassDataSource;
 import com.boyz.rho.pass.Utils.PasswordGeneratorHelper;
 
 /**
- * Created by rho on 11/13/16.
+ * Created by rho on 11/30/16.
  */
 
-public class AddSiteActivity extends Activity implements View.OnClickListener{
+public class EditSiteActivity extends Activity implements View.OnClickListener {
 
     private EditText siteText;
     private EditText userText;
@@ -23,14 +23,23 @@ public class AddSiteActivity extends Activity implements View.OnClickListener{
     private PassDataSource dataSource;
     private PasswordGeneratorHelper genHelper = new PasswordGeneratorHelper();
 
+    private String sitename;
+    private String username;
+    private String password;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_site);
+        Bundle bundle = getIntent().getExtras();
 
         siteText = (EditText) findViewById(R.id.edit_site);
         userText = (EditText) findViewById(R.id.edit_user);
         passText = (EditText) findViewById(R.id.edit_password);
+
+        sitename = bundle.getString("site");
+        username = bundle.getString("username");
+        password = bundle.getString("password");
 
         Button submitButton = (Button) findViewById(R.id.submit_button);
         submitButton.setOnClickListener(this);
@@ -40,22 +49,26 @@ public class AddSiteActivity extends Activity implements View.OnClickListener{
 
         dataSource = new PassDataSource(this);
         try {
-            dataSource.open(getIntent().getExtras().getString("password", null));
+            dataSource.open(getIntent().getExtras().getString("databasePassword", null));
         }
         catch (Exception e) {
             Toast.makeText(this, "Error opening database", Toast.LENGTH_SHORT).show();
         }
+        fillWidgets();
+    }
 
+    private void fillWidgets() {
+        siteText.setText(sitename);
+        userText.setText(username);
+        passText.setText(password);
     }
 
     @Override
     public void onClick(View view) {
         switch(view.getId()) {
             case R.id.submit_button:
-                String site = siteText.getText().toString();
-                String username = userText.getText().toString();
-                String password = passText.getText().toString();
-                dataSource.addPassword(site, username, password);
+                dataSource.updateSite(siteText.getText().toString(), userText.getText().toString(),
+                        passText.getText().toString());
                 finish();
                 break;
             case R.id.generate_button:

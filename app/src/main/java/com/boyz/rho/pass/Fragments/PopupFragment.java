@@ -8,14 +8,18 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.boyz.rho.pass.Activities.EditSiteActivity;
 import com.boyz.rho.pass.Activities.MainActivity;
 import com.boyz.rho.pass.R;
 import com.boyz.rho.pass.Utils.PassDataSource;
 
 import java.sql.SQLException;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by rho on 11/16/16.
@@ -27,11 +31,11 @@ public class PopupFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Bundle bundle = getArguments();
+        final Bundle bundle = getArguments();
         final String site = bundle.getString("site");
         final String username = bundle.getString("username");
         final String password = bundle.getString("password");
-        String databasePassword = bundle.getString("databasePassword");
+        final String databasePassword = bundle.getString("databasePassword");
 
         final PassDataSource dataSource = new PassDataSource(getContext());
         try {
@@ -55,6 +59,16 @@ public class PopupFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         dataSource.deletePassword(site, username);
                         delete = true;
+                        dismiss();
+                    }
+                })
+                .setNeutralButton("Edit Entry", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        Activity activity = getActivity();
+                        Intent intent = new Intent(activity, EditSiteActivity.class);
+                        intent.putExtras(bundle);
+                        startActivityForResult(intent, RESULT_OK);
                         dismiss();
                     }
                 });

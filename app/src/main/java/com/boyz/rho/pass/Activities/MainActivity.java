@@ -3,7 +3,6 @@ package com.boyz.rho.pass.Activities;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.ClipboardManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -168,6 +167,7 @@ public class MainActivity extends AppCompatActivity
         if (delete) {
             list = dataSource.getAllPasswords();
         }
+
         adapter = new ListAdapter(this, list);
         listView.setAdapter(adapter);
     }
