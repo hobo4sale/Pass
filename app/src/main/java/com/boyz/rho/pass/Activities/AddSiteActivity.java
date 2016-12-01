@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -20,6 +21,12 @@ public class AddSiteActivity extends Activity implements View.OnClickListener{
     private EditText siteText;
     private EditText userText;
     private EditText passText;
+
+    private CheckBox lowerCheck;
+    private CheckBox upperCheck;
+    private CheckBox numberCheck;
+    private CheckBox specialCheck;
+
     private PassDataSource dataSource;
     private PasswordGeneratorHelper genHelper = new PasswordGeneratorHelper();
 
@@ -31,6 +38,11 @@ public class AddSiteActivity extends Activity implements View.OnClickListener{
         siteText = (EditText) findViewById(R.id.edit_site);
         userText = (EditText) findViewById(R.id.edit_user);
         passText = (EditText) findViewById(R.id.edit_password);
+
+        lowerCheck = (CheckBox) findViewById(R.id.lowerCheck);
+        upperCheck = (CheckBox) findViewById(R.id.upperCheck);
+        numberCheck = (CheckBox) findViewById(R.id.numberCheck);
+        specialCheck = (CheckBox) findViewById(R.id.specialCheck);
 
         Button submitButton = (Button) findViewById(R.id.submit_button);
         submitButton.setOnClickListener(this);
@@ -59,7 +71,8 @@ public class AddSiteActivity extends Activity implements View.OnClickListener{
                 finish();
                 break;
             case R.id.generate_button:
-                char[] gen = genHelper.getPassword(true, true, true, true);
+                char[] gen = genHelper.getPassword(upperCheck.isChecked(), lowerCheck.isChecked(),
+                        numberCheck.isChecked(), specialCheck.isChecked());
                 passText.setText(gen, 0, gen.length);
                 break;
         }
