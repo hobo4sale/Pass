@@ -84,8 +84,17 @@ public class EditSiteActivity extends Activity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.generate_button:
-                char[] gen = genHelper.getPassword(upperCheck.isChecked(), lowerCheck.isChecked(),
-                        numberCheck.isChecked(), specialCheck.isChecked());
+                boolean upper = upperCheck.isChecked();
+                boolean lower = lowerCheck.isChecked();
+                boolean number = numberCheck.isChecked();
+                boolean check = specialCheck.isChecked();
+
+                if(!upper && !lower && !number && !check) {
+                    Toast.makeText(this, "Please check at least one optioin.", Toast.LENGTH_SHORT)
+                            .show();
+                    break;
+                }
+                char[] gen = genHelper.getPassword(upper, lower, number, check);
                 passText.setText(gen, 0, gen.length);
                 break;
         }
